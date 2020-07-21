@@ -1,5 +1,5 @@
-BIN_DIR := bin
-SOLUTIONS_DIR := solutions
+BIN_DIR := $(abspath bin)
+SOLUTIONS_DIR := $(abspath solutions)
 SOLUTIONS_SOURCE := $(abspath $(wildcard ${SOLUTIONS_DIR}/*.cpp))
 SOLUTIONS := $(patsubst %.cpp, %, $(notdir $(basename ${SOLUTIONS_SOURCE})))
 SOLUTIONS_RUNNABLE := $(addprefix ${BIN_DIR}/, ${SOLUTIONS})
@@ -17,3 +17,7 @@ ${BIN_DIR}:
 
 ${BIN_DIR}/%: ${SOLUTIONS_DIR}/%.cpp
 	${CC} ${CFLAGS} -o $@ $<
+
+.PHONY: clean
+clean:
+	rm -r ${BIN_DIR}
