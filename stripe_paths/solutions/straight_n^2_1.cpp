@@ -12,6 +12,10 @@ vector<int> colors;
 vector<int> parents;
 
 void precalc(int v, int depth = 0, int p = -1) {
+    if (depth == 0) {
+        colors[v] = -1;
+    }
+
     depths[v] = depth;
     parents[v] = p;
 
@@ -30,16 +34,17 @@ long long calc_answer_up(int v, int k) {
     bool ok = true;
 
     while (ok) {
-        ok = false;
-        
+        int up_cnt_0 = 0;
+        int up_cnt_1 = 1;
+
         for (int i = 0; i < k && v > 0 && colors[v] == 0; v = parents[v]) {
-            ok = i == k - 1;
+            ++up_cnt_0;
         }
         
         for (int i = 0; i < k && v > 0 && colors[v] == 1; v = parents[v]) {
-            ok = i == k - 1;
+            ++up_cnt_1;
         }
-
+        ok = (up_cnt_0 == k) && (up_cnt_1 == k);
         answer += ok;
     }
     return answer;
