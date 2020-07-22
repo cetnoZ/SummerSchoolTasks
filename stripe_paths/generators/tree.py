@@ -1,5 +1,6 @@
 import sys
 import random
+from collections import deque
 
 
 class Node:
@@ -7,6 +8,8 @@ class Node:
         self._index = index
         self._label = label
         self._children = []
+        self._depth = 1
+        self._parent = None
 
     @property
     def index(self):
@@ -15,6 +18,15 @@ class Node:
     @property
     def children(self):
         return self._children
+
+    @property
+    def depth(self):
+        return self._depth
+
+    @property
+    def parent(self):
+        return self._parent
+
     @property
     def label(self):
         return self._label
@@ -24,18 +36,26 @@ class Node:
         self._label = label
 
     def add_child(self, node):
+        node._depth = self._depth + 1
+        node._parent = self
         self._children.append(node)
 
 def tree_to_edges(node):
-    for child in node.children:
-        yield (node.index, child.index, child.label)
-        for child_edge in tree_to_edges(child):
-            yield child_edge
+    vertices = deque([node])
+    while len(vertices) > 0:
+        vertex = vertices.pop()
+        for child in vertex.children:
+            vertices.appendleft(child)
+            yield (vertex.index, child.index, child.label)
 
 def count_vertices(node):
     count = 1
-    for child in node.children:
-        count += count_vertices(child)
+    vertices = deque([node])
+    while len(vertices) > 0:
+        vertex = vertices.pop()
+        for child in vertex.children:
+            vertices.appendleft(child)
+            count += 1
     return count
 
 def print_tree(node, file=sys.stdout):

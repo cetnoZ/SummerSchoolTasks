@@ -1,4 +1,5 @@
 import random
+from collections import deque
 from .tree_labeler import *
 
 
@@ -8,10 +9,10 @@ class RandomTreeLabeler(TreeLabeler):
         self._percent = percent
 
     def label_tree(self, root):
-        for child in root.children:
-            self.label_node(child)
-
-    def label_node(self, node):
-        node.label = 1 if random.random() > self._percent else 0
-        for child in node.children:
-            self.label_node(child)
+        vertices = deque([root])
+        while len(vertices) > 0:
+            vertex = vertices.pop()
+            vertex.label = 1 if random.random() > self._percent else 0
+            for child in vertex.children:
+                vertices.appendleft(child)
+        return root

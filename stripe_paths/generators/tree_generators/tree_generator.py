@@ -10,3 +10,5 @@ class TreeGenerator:
     def create_node(self):
         self.vertex_counter += 1
         return Node(self.vertex_counter)
+
+    create_node.counter = 0

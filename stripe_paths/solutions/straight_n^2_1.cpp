@@ -35,13 +35,13 @@ long long calc_answer_up(int v, int k) {
 
     while (ok) {
         int up_cnt_0 = 0;
-        int up_cnt_1 = 1;
+        int up_cnt_1 = 0;
 
-        for (int i = 0; i < k && v > 0 && colors[v] == 0; v = parents[v]) {
+        for (int i = 0; i < k && v > 0 && colors[v] == 0; ++i, v = parents[v]) {
             ++up_cnt_0;
         }
         
-        for (int i = 0; i < k && v > 0 && colors[v] == 1; v = parents[v]) {
+        for (int i = 0; i < k && v > 0 && colors[v] == 1; ++i, v = parents[v]) {
             ++up_cnt_1;
         }
         ok = (up_cnt_0 == k) && (up_cnt_1 == k);
