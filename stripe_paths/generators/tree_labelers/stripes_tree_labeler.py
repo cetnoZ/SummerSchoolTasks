@@ -30,22 +30,6 @@ class StripesTreeLabeler(TreeLabeler):
 
         return root
 
-    def calc_depths(self, root):
-        depths = {}
-        vertices = deque([root])
-        while len(vertices) > 0:
-            vertex = vertices.pop()
-            depth = vertex.depth - 1
-
-            if depth in depths:
-                depths[depth] += [vertex]
-            else:
-                depths[depth] = [vertex]
-
-            for child in vertex.children:
-                vertices.appendleft(child)
-        return depths
-
     def generate_k(self, k_type, depth):
         if k_type == 'average':
             median_k = round(math.sqrt(depth))
@@ -75,20 +59,3 @@ class StripesTreeLabeler(TreeLabeler):
         min_up_cnt = 1
         max_up_cnt = vertex.depth // (2 * k)
         return random.randint(min_up_cnt, max_up_cnt)
-
-    def label_up(self, vertex, k, up_cnt):
-        for _ in range(up_cnt):
-            if vertex == None:
-                break
-
-            for _ in range(k):
-                if vertex == None:
-                    break
-                vertex.label = 0
-                vertex = vertex.parent
-
-            for _ in range(k):
-                if vertex == None:
-                    break
-                vertex.label = 1
-                vertex = vertex.parent

@@ -14,7 +14,7 @@ class OneStripeTreeLabeler(TreeLabeler):
     def label_tree(self, root):
         self._random_labeler.label_tree(root)
 
-        depths = self.calc_depths(root, {})
+        depths = self.calc_depths(root)
         depths_keys = list(depths.keys())
         weights = list(map(len, depths.values()))
         accumulated_weights = list(itertools.accumulate(weights))
@@ -27,23 +27,15 @@ class OneStripeTreeLabeler(TreeLabeler):
 
         return root
 
-    def calc_depths(self, node, depths, depth=0):
-        if depth in depths:
-            depths[depth] += [node]
-        else:
-            depths[depth] = [node]
-
-        for child in node.children:
-            self.calc_depths(child, depths, depth + 1)
-        return depths
-
     def generate_k(self, k_type, depth):
         if k_type == 'average':
             median_k = round(math.sqrt(depth))
         elif k_type == 'big':
             median_k = round(depth / random.randint(2, 10))
         elif k_type == 'small':
-            median_k = random.randint(1, 10)
+            return random.randint(1, 5)
+        elif k_type == 'little':
+            return random.randint(1, 2)
         elif k_type == 'random':
             return self.generate_k(random.choice(['average', 'big', 'small']), depth)
 
@@ -64,20 +56,3 @@ class OneStripeTreeLabeler(TreeLabeler):
 
     def pick_up_cnt(self, k, vertex):
         return vertex.depth // (2 * k)
-
-    def label_up(self, vertex, k, up_cnt):
-        for _ in range(up_cnt):
-            if vertex == None:
-                break
-
-            for _ in range(k):
-                if vertex == None:
-                    break
-                vertex.label = 0
-                vertex = vertex.parent
-
-            for _ in range(k):
-                if vertex == None:
-                    break
-                vertex.label = 1
-                vertex = vertex.parent

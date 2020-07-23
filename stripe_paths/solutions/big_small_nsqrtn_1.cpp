@@ -20,8 +20,11 @@ vector<int> parents;
 vector<int> up_next;
 vector<int> up_count;
 vector<int> up_dp;
+vector<int> vertices;
 
 void precalc(int v, int p = 0) {
+    vertices.push_back(v);
+
     up_next[v] = (colors[v] == colors[p]) ? up_next[p] : p;
     if (colors[v] == colors[p]) {
         up_next[v] = up_next[p];
@@ -40,7 +43,6 @@ void precalc(int v, int p = 0) {
         }
     }
 }
-
 
 long long calc_up_cnt(int v, int color) {
     int v_color = colors[v];
@@ -88,26 +90,21 @@ long long calc_big_k_answers(int n, int min_k) {
     return answer;
 }
 
-long long calc_dp(int v, int k, int p = -1) {
+long long calc_dp(int k) {
     long long answer = 0;
     
-    int u, up_cnt_0, up_cnt_1;
-    tie(u, up_cnt_0, up_cnt_1) = calc_segment_up(v, k);
-    if (up_cnt_0 == k && up_cnt_1 == k) {
-        up_dp[v] = up_dp[u] + 1;
-    } else if (up_cnt_0 == k && up_cnt_1 > k) {
-        up_dp[v] = 1;
-    } else {
-        up_dp[v] = 0;
-    }
-
-    answer += up_dp[v];
-
-    for (const auto& edge : g[v]) {
-        int u = edge.first;
-        if (u != p) {
-            answer += calc_dp(u, k, v);
+    for (int v : vertices) {
+        int u, up_cnt_0, up_cnt_1;
+        tie(u, up_cnt_0, up_cnt_1) = calc_segment_up(v, k);
+        if (up_cnt_0 == k && up_cnt_1 == k) {
+            up_dp[v] = up_dp[u] + 1;
+        } else if (up_cnt_0 == k && up_cnt_1 > k) {
+            up_dp[v] = 1;
+        } else {
+            up_dp[v] = 0;
         }
+    
+        answer += up_dp[v];
     }
     return answer;
 }
@@ -115,7 +112,7 @@ long long calc_dp(int v, int k, int p = -1) {
 long long calc_small_k_answers(int n, int max_k) {
     long long answer = 0;
     for (int k = 1; k < max_k; k++) {
-        answer += calc_dp(ROOT, k);
+        answer += calc_dp(k);
     }
     return answer;
 }
