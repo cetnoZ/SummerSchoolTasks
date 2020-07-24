@@ -13,3 +13,8 @@ rm -f coevolution/tests/out/*
 
 rm -f synthesis_and_struggle/tests/in/*
 rm -f synthesis_and_struggle/tests/out/*
+
+
+
+touch -f replication_part1/tests/in/0
+touch -f replication_part1/tests/out/0
