@@ -1,0 +1,4 @@
+bin/*
+tests/*
+__pycache__/
+*.py[cod]

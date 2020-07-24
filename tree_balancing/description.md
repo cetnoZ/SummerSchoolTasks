@@ -6,9 +6,9 @@ Rotation of two adjacent vertices u and v in the tree is defined as following ac
 
       p                  p
       |                  |
-      v                  u
+      u                  v
      / \                / \
-    A   u      <=>     v   C
+    A   v      <=>     u   C
        / \            / \
       B   C          A   B
 
@@ -25,7 +25,7 @@ As seen from the formula cost is sum of height and weight of every vertex in the
 
 The first line of the input contains one integer n (1 <= n <= 10 * 10 ^ 3) -- the number of vertices in the tree.
 
-The next n line describes each vertex. i-th line contains three integers l_i, r_i and w_i (1 <= l_i, r_i <= n, 0 <= w_i <= 10 ^ 9) -- left and right childs and weight of i-th vertex.
+The next n line describes each vertex. i-th line contains three integers l_i, r_i and w_i (0 <= l_i, r_i <= n, 0 <= w_i <= 10 ^ 9) -- left and right childs and weight of i-th vertex. If vertex has no left of right child value of l_i or r_i will be equal to 0 accordingly.
 
 Its guaranteed that input is correct, and given data represents valid tree with root in vertex 1.
 
