@@ -18,3 +18,16 @@ rm -f synthesis_and_struggle/tests/out/*
 
 touch -f replication_part1/tests/in/0
 touch -f replication_part1/tests/out/0
+
+touch -f replication_part2/tests/in/0
+touch -f replication_part2/tests/out/0
+
+touch -f infection/tests/in/0
+touch -f infection/tests/out/0
+
+touch -f coevolution/tests/in/0
+touch -f coevolution/tests/out/0
+
+
+touch -f synthesis_and_struggle/tests/in/0
+touch -f synthesis_and_struggle/tests/out/0
