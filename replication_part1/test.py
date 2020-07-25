@@ -2,8 +2,9 @@ import sys
 import os.path
 import os
 import time
-
+''' Tester only for developers purpose!!! Not for real student tasks.'''
 solution_name = "solution.cpp"
+time_limit = 2
 
 def print_error(text):
     print('\033[31;1m' + text + '\033[m')
@@ -44,20 +45,25 @@ if __name__ == "__main__":
             exit(1)
         
         project_name = solution_name[:solution_name.find('.')]#cut file extention
-        ###start solution with in_test data
+        ###start solution with in_test input and res_test output
+        ###tmp has program time execution
         #
-        os.system("{ "+("time ./solution_to_test/{project_name} <{in_test} >{res_test}".format(project_name=project_name, in_test=in_test, res_test=res_test))+" ; } 2> tmp")
+        os.system("{ "+("time ./solution_to_test/{project_name} <{in_test} >{res_test}"./
+                        format(project_name=project_name, in_test=in_test, res_test=res_test))+" ; } 2> tmp")
         #
-        execution_time = 2
+        execution_time = 0
+        #read execution time from tmp file
         with open('tmp') as file:
             line = file.readline()
+            #time format has 4 symbols, example 3.32system
             execution_time = float(line[line.find('system') - 4: line.find('system')])
 
         print("##########################################")
         print("Test {test} finished".format(test=str(test)))
         print("Time: " + str(execution_time))
+        
         cmp_res = os.system("cmp {out_test} {res_test}".format(out_test=out_test, res_test=res_test))
-        if cmp_res != 0 or execution_time > 2:
+        if cmp_res != 0 or execution_time > time_limit:
             print_error("Not success")
         else:
             print_good("OK")
