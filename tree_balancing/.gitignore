@@ -1,5 +1,6 @@
 bin/*
 tests/*
 tmp/*
+checker/checker
 __pycache__/
 *.py[cod]
