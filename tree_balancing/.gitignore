@@ -1,4 +1,5 @@
 bin/*
 tests/*
+tmp/*
 __pycache__/
 *.py[cod]
