@@ -86,6 +86,24 @@ void print_tree(int l, int r, const string& prefix = "", bool is_left = false) {
     }
 }
 
+void print_tree(node_t *node, const string& prefix = "", bool is_left = false) {
+
+    clog << prefix << (is_left ? "├─" : "└─");
+
+    if (node == nullptr) {
+        clog << endl;
+    } else {
+        int vertex = node->index;
+        clog << vertex << " (" << weights[vertex] << ")" << endl;
+    }
+
+    if (node->left != nullptr || node->right != nullptr) {
+        string new_prefix = prefix + (is_left ? "│ " : "  ");
+        print_tree(node->left, new_prefix, true);
+        print_tree(node->right, new_prefix, false);
+    }
+}
+
 long long calc_cost(int l, int r, long long height = 1) {
     if (l > r) {
         return 0;
@@ -131,7 +149,7 @@ node_t *build_initial_tree(int n) {
         }
         if (rights[v] != 0) {
             node.right = nodes[rights[v]];
-            node.left->parent = nodes[v];
+            node.right->parent = nodes[v];
         }
         node.weight = weights[v];
         node.index = v;
