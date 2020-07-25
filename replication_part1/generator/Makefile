@@ -1,15 +1,22 @@
 PROJECT=generator
+
 CC=g++
 LL=g++
 
-FILE=repl1_gen.cpp
+FILES=repl1_gen.cpp
 
-CFLAG=-std=c++17 -Wall -O3 -g
+CFLAG = -std=c++17 
+CFLAG+= -Wall 
+CFLAG+= -O3
+CFLAG+= -g
 
 all:$(PROJECT)
 
 $(PROJECT):$(FILE)
-	$(CC) $(CFLAG) $(FILE) -o $(PROJECT)
+	$(CC) $(CFLAG) $(FILES) -o $(PROJECT)
 
 start:$(PROJECT)
 	./$(PROJECT)
+
+clean:
+	rm -f $(PROJECT)
