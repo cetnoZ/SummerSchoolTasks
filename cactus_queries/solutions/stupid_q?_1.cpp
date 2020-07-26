@@ -1,51 +1,54 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <set>
 
 
 using namespace std;
 
 vector<vector<int>> g;
 vector<int> used;
-vector<int> cycles;
 vector<int> stack;
 
-void mark_all_cycles(int v, int p = -1) {
-    if (used[v] == 1) {
-        for (auto it = stack.rbegin(); it != stack.rend() && *it != v; it++) {
-            cycles[*it]++;
-        }
-        cycles[v]++;
+int cycles_count = 0;
+
+void find_all_cycles(int s, int v, int p = -1) {
+    if (v == s && p != -1) {
+        cycles_count += 1;
         return;
-    } else if (used[v] == 2) {
+    } if (used[v] == 1) {
         return;
     }
-    stack.push_back(v);
+
     used[v] = 1;
+    stack.push_back(v);
 
     for (int u : g[v]) {
-        if (u == p) {
-            continue;
+        if (u != p) {
+            find_all_cycles(s, u, v);
         }
-        mark_all_cycles(u, v);
     }
 
     used[v] = 0;
     stack.pop_back();
 }
 
-bool query(int a, int b) {
+bool query(int n, int a, int b) {
     g[a].push_back(b);
     g[b].push_back(a);
 
-    fill(begin(cycles), end(cycles), 0);
     fill(begin(used), end(used), 0);
 
-    mark_all_cycles(0);
+    bool answer = true;
+    for (int i = 0; i < n; i++) {
+        cycles_count = 0;
+        find_all_cycles(i, i);
+        answer &= cycles_count <= 2;
+    }
 
     g[a].pop_back();
     g[b].pop_back();
-    return all_of(begin(cycles), end(cycles), [] (int cycles_count) { return cycles_count <= 2; });
+    return answer;
 }
 
 int main() {
@@ -69,7 +72,6 @@ int main() {
 
     used.resize(n);
     stack.reserve(n);
-    cycles.resize(n);
 
     int q;
     cin >> q;
@@ -81,8 +83,8 @@ int main() {
         a--;
         b--;
 
-        bool answer = query(a, b);
-        cout << (answer ? "YES" : "NO") << endl;
+        bool answer = query(n, a, b);
+        cout << (answer ? "Yes" : "No") << endl;
      }
 
 }
