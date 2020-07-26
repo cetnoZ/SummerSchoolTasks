@@ -11,24 +11,26 @@ vector<int> cycles;
 vector<int> stack;
 
 void mark_all_cycles(int v, int p = -1) {
-    if (used[v]) {
+    if (used[v] == 1) {
         for (auto it = stack.rbegin(); it != stack.rend() && *it != v; it++) {
             cycles[*it]++;
         }
         cycles[v]++;
         return;
+    } else if (used[v] == 2) {
+        return;
     }
     stack.push_back(v);
-    used[v] = true;
+    used[v] = 1;
 
     for (int u : g[v]) {
-        if (v == p) {
+        if (u == p) {
             continue;
         }
         mark_all_cycles(u, v);
     }
 
-    used[v] = false;
+    used[v] = 0;
     stack.pop_back();
 }
 
@@ -37,8 +39,9 @@ bool query(int a, int b) {
     g[b].push_back(a);
 
     fill(begin(cycles), end(cycles), 0);
+    fill(begin(used), end(used), 0);
 
-    mark_all_cycles(a);
+    mark_all_cycles(0);
 
     g[a].pop_back();
     g[b].pop_back();
@@ -51,6 +54,8 @@ int main() {
     int n, m;
     cin >> n >> m;
 
+    g.resize(n + 1);
+
     for (int i = 1; i <= m; i++) {
         int v, u;
         cin >> v >> u;
@@ -62,7 +67,9 @@ int main() {
         g[u].push_back(v);
     }
 
+    used.resize(n);
     stack.reserve(n);
+    cycles.resize(n);
 
     int q;
     cin >> q;

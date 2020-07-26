@@ -18,6 +18,23 @@ def create_tree_generator(generator_type='random'):
 def create_tree_expander(average_cycle, cycle_variation):
     return RandomTreeExpander(average_cycle, cycle_variation)
 
+def generate_queries(graph, queries_count):
+    nodes_count = len(list(graph_to_nodes(graph)))
+    edges = {(first_node.index, second_node.index) for (first_node, second_node) in graph_to_edges(graph)}
+
+    if nodes_count > 3:
+        for _ in range(queries_count):
+            first_index, second_index = random.sample(range(1, nodes_count + 1), 2)
+            while ((first_index, second_index) in edges) or ((second_index, first_index) in edges):
+                first_index, second_index = random.sample(range(1, nodes_count + 1), 2)
+            yield (first_index, second_index)
+
+
+def print_queries(queries, file=sys.stdout):
+    print(len(queries), file=file)
+    for (first_index, second_index) in queries:
+        print(f"{first_index} {second_index}", file=file)
+        
 def main():
     test_count = int(os.getenv('TEST_COUNT', '1'))
     test_start_index = int(os.getenv('TEST_START_INDEX', '0')) + 1
@@ -28,6 +45,7 @@ def main():
     average_cycle = int(os.getenv('AVERAGE_CYCLE', '10'))
     cycle_variation = float(os.getenv('CYCLE_VARIATION', '0.1'))
     vertex_count = int(os.getenv('VERTEX_COUNT', '1'))
+    queries_count = int(os.getenv('QUERIES_COUNT', '1'))
 
     random.seed(f"{seed_value}_{test_start_index}")
 
@@ -44,6 +62,9 @@ def main():
             result_graph = tree_expander.expand_tree(tree, current_vertex_count)
 
             print_graph(result_graph, file=file)
+            current_queries_count = random.randint(0, queries_count)
+            queries = list(generate_queries(result_graph, current_queries_count))
+            print_queries(queries, file=file)
         print(f"[TEST #{test_index: >3}] done")
 
 if __name__ == '__main__':
