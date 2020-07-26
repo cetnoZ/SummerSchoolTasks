@@ -3,7 +3,7 @@ PROJECT=generator
 CC=g++
 LL=g++
 
-FILES=synt_gen.cpp
+FILES=infection_gen.cpp
 
 CFLAG = -std=c++17 
 CFLAG+= -Wall 

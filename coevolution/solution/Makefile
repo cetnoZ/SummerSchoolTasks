@@ -1,9 +1,9 @@
-PROJECT=generator
+PROJECT=solution
 
 CC=g++
 LL=g++
 
-FILES=synt_gen.cpp
+FILES=infection.cpp
 
 CFLAG = -std=c++17 
 CFLAG+= -Wall 
@@ -17,6 +17,6 @@ $(PROJECT):$(FILE)
 
 start:$(PROJECT)
 	./$(PROJECT)
-
+	python script.py
 clean:
 	rm -f $(PROJECT)

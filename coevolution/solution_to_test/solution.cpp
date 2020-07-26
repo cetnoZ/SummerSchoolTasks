@@ -66,9 +66,6 @@ void dfs(int64_t node, int64_t far, int64_t w)
 			}
 }
 //TODO: write full solution
-
-
-
 int main()
 {
 	std::cin >> N >> K;   
