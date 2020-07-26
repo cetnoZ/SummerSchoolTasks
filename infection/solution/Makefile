@@ -3,7 +3,7 @@ PROJECT=solution
 CC=g++
 LL=g++
 
-FILES=repl2.cpp
+FILES=infection.cpp
 
 CFLAG = -std=c++17 
 CFLAG+= -Wall 

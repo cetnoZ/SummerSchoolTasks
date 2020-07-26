@@ -3,97 +3,54 @@
 #include <queue>
 #include <fstream>
 #include <limits>
+#include <vector>
+#include <algorithm>
+std::vector<int64_t> lists;
 
-const uint32_t maxn = 4e5 + 7;
-constexpr uint32_t inf = (1 << 31);
+const int64_t maxn = 30000 + 7;
 
-class Tree{
-    uint32_t mas[maxn];
-    uint32_t count;
-public:
-    explicit Tree(){
-        count = 0;
-        mas[0] = inf;
-        for(uint32_t i = 1; i < maxn; i++)
-            mas[i] = 0;
-    }
-    ~Tree(){}
+bool check[maxn] = {false};
 
-    uint32_t push(const uint32_t &num){
-        mas[++count] = num;
-        uint32_t j = count / 2;//parent
-        uint32_t i = count;
-        uint32_t operation_cnt = 0;
-        while(mas[j] < mas[i])
-        {
-            std::swap(mas[j], mas[i]);
-            i = j;
-            j = i / 2;
-            operation_cnt++;
-        }
-        return operation_cnt;
-    }
+std::vector<std::vector<std::pair<int64_t, int64_t>>> tree;
 
-    uint32_t pop(){
-        mas[1] = mas[count];
-        mas[count--] = 0;
-        uint32_t operation_cnt = 0;
-        uint32_t i = 1;
-        uint32_t j = i * 2;
-        while(mas[i] < mas[j] || mas[i] < mas[j + 1]){
-            operation_cnt++;
+void dfs(int64_t v, int64_t sum = 0){
+    check[v] = true;
+    for(int64_t i = 0; i < tree[v].size(); i++)
+        if(!check[tree[v][i].first])
+            dfs(tree[v][i].first, sum + tree[v][i].second);
+    if(tree[v].size() == 1)
+        lists.push_back(sum);
+}
 
-            if(mas[i] < mas[j] && mas[i] < mas[j + 1]){
-                
-                if(mas[j] > mas[j + 1]){
-                    std::swap(mas[j], mas[i]);
-                    i = j;
-                    j = i * 2;
-                }else{
-                    std::swap(mas[j + 1], mas[i]);
-                    i = j + 1;
-                    j = i * 2;
-                }
-                continue;
-            }
-
-            if(mas[i] < mas[j]){
-                std::swap(mas[j], mas[i]);
-                i = j;
-                j = i * 2;
-                continue;
-            }
-            if(mas[i] < mas[j + 1]){
-                std::swap(mas[j + 1], mas[i]);
-                i = j + 1;
-                j = i * 2;
-                continue;
-            }
-        }
-        return operation_cnt;
-    }
-
-    uint32_t top(){
-        return mas[1];
-    }
-};
 
 int main(){
-	uint64_t N, P;
-    Tree tree;
-    std::cin >> N >> P;
-    tree.push(P);
-    for(uint64_t i = 0; i < N; i++){
-        unsigned char operation;
-        std::cin >> operation;
-        if(operation == '+'){
-            uint64_t data;
-            std::cin >> data;
-            std::cout << tree.push(data) << " " << tree.top() << std::endl;
-        }else{
-            std::cout << tree.pop() << " " << tree.top() << std::endl;
-        }
+	int64_t N, E, S;
+    std::vector<int64_t> virus_array;
+
+    std::cin >> E >> N >> S;
+    tree.resize(E + 2);
+    for(int64_t i = 0; i < N; i++){
+        int64_t cost;
+        std::cin >> cost;
+        virus_array.push_back(cost);
+    }
+    for(int64_t i = 0; i < E; i++){
+        int64_t u, v, c;
+        std::cin >> u >> v >> c;
+        tree[u].push_back(std::make_pair(v, c));
+        tree[v].push_back(std::make_pair(u, c));
     }
 
+    std::sort(virus_array.begin(), virus_array.end(), std::greater<int>());
+    dfs(S);
+    std::sort(lists.begin(), lists.end());
+
+    int64_t res = 0;
+    for(int64_t i = 0; i < std::min(lists.size(), virus_array.size()); i++){
+        if(lists[i] < virus_array[i]){
+            res += virus_array[i] - lists[i];
+        }
+    }
+    std::cout << res << std::endl;
     return 0;    
 }
