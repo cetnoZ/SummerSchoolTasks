@@ -8,7 +8,7 @@
 #include <vector>
 #include <algorithm>
 
-const uint32_t maxn = 1'000'00;
+const uint32_t maxn = 1'000'000;
 const uint32_t maxp = 1'000'000'000;
 const uint32_t maxa = 1'000'000'000;
 
