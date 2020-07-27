@@ -4,6 +4,7 @@ import sys
 import random
 from tree import *
 from tree_generators import *
+from tree_weighters import *
 
 
 def create_tree_generator(generator_type='random'):
@@ -44,6 +45,7 @@ def main():
     vertex_count = int(os.getenv('VERTEX_COUNT', '1'))
     queries_count = int(os.getenv('QUERIES_COUNT', '1'))
     tree_type = os.getenv('TREE_TYPE', 'random')
+    weight_type = os.getenv('WEIGHT_TYPE', 'random')
 
     random.seed(f"{seed_value}_{test_start_index}")
 
@@ -57,7 +59,7 @@ def main():
             tree = tree_weighter.set_weights(tree)
             print_tree(tree, file=file)
 
-            queries = len(generate_queries(tree, random.randint(0, queries_count)))
+            queries = list(generate_queries(tree, random.randint(0, queries_count)))
             print_queries(queries, file=file)
 
         print(f"[TEST #{test_index: >3}] done")

@@ -72,7 +72,6 @@ long long query(int u, int v) {
     unordered_set<int> path_vertices(begin(path), end(path));
 
     long long answer = calc_subanswer(path);
-
     for (int vv = 1; vv <= n; vv++) {
         for (int uu = 1; uu <= n; uu++) {
             if (vv == uu) {
@@ -104,6 +103,7 @@ int main() {
     lefts.resize(n + 1);
     rights.resize(n + 1);
     weights.resize(n + 1);
+    parent.resize(n + 1);
 
     for (int i = 1; i <= n; i++) {
         int l, r, w;
@@ -118,6 +118,10 @@ int main() {
         weights[i] = w;
     }
 
+    ltime.resize(n + 1);
+    rtime.resize(n + 1);
+    precalc(1);
+
     int q;
     cin >> q;
     for (int i = 0; i < q; i++) {
@@ -126,8 +130,6 @@ int main() {
 
         cout << query(u, v) << endl;
     }
-
-
 
     return 0;
 }
