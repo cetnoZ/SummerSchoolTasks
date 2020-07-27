@@ -99,6 +99,7 @@ long long query(int u, int v) {
     long long max_out_value = numeric_limits<long long>::min();
     long long min_in_value = numeric_limits<long long>::max();
 
+    bool was = false;
     for (int i = 0; i < path.size(); i++) {
        for (int neighbor_i = 0; neighbor_i < neighbors[i].size(); neighbor_i++) {
            const neighbor_t& first_neighbor = neighbors[i][neighbor_i];
@@ -112,7 +113,7 @@ long long query(int u, int v) {
                answer = min(answer, sub_answer);
            }
 
-           if (i != 0) {
+           if (was) {
                sub_answer = path_weight - first_neighbor.out_value + min_in_value;
                answer = min(answer, sub_answer);
 
@@ -125,6 +126,7 @@ long long query(int u, int v) {
            const neighbor_t& neighbor = neighbors[i][neighbor_i];
            min_in_value = min(min_in_value, neighbor.in_value);
            max_out_value = max(max_out_value, neighbor.out_value);
+           was = true;
        }
     }
 
@@ -143,6 +145,7 @@ int main() {
     lefts.resize(n + 1);
     rights.resize(n + 1);
     weights.resize(n + 1);
+    parent.resize(n + 1);
 
     for (int i = 1; i <= n; i++) {
         int l, r, w;
@@ -156,6 +159,12 @@ int main() {
 
         weights[i] = w;
     }
+
+    ltime.resize(n + 1);
+    rtime.resize(n + 1);
+    used.resize(n + 1);
+
+    precalc(1);
 
     int q;
     cin >> q;

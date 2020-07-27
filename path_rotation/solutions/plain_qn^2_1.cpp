@@ -89,12 +89,19 @@ long long query(int u, int v) {
         int v = path[i];
         auto v_neighbors = get_neighbors(v);
         neighbors[i] = v_neighbors;
+       // clog << "for v = " << v << " neighbors are ";
+      //  for (auto e : v_neighbors) {
+     //       clog << " {" << e.in_value << ", " << e.out_value << "} , ";
+       // }
+   //     clog << endl;
     }
+
+// clog << "Here 1" << endl;
 
     long long path_weight = calc_path_weight(path);
     long long answer = path_weight;
     for (int i = 0; i < path.size(); i++) {
-        for (int j = 0; j <= i; j++) {
+        for (int j = 0; j < path.size(); j++) {
             for (int neighbor_i = 0; neighbor_i < neighbors[i].size(); neighbor_i++) {
                 const neighbor_t& first_neighbor = neighbors[i][neighbor_i];
                 for (int neighbor_j = 0; neighbor_j < neighbors[j].size(); neighbor_j++) {
@@ -105,6 +112,7 @@ long long query(int u, int v) {
 
                     long long sub_answer = path_weight - first_neighbor.out_value + second_neighbor.in_value;
                     answer = min(answer, sub_answer);
+        //            clog << "rotate with " << path[i] << ", " << path[j] << " to get " << sub_answer << endl;
                 }
             }
         }
@@ -126,6 +134,7 @@ int main() {
     lefts.resize(n + 1);
     rights.resize(n + 1);
     weights.resize(n + 1);
+    parent.resize(n + 1);
 
     for (int i = 1; i <= n; i++) {
         int l, r, w;
@@ -139,6 +148,12 @@ int main() {
 
         weights[i] = w;
     }
+
+    ltime.resize(n + 1);
+    rtime.resize(n + 1);
+    used.resize(n + 1);
+
+    precalc(1);
 
     int q;
     cin >> q;
