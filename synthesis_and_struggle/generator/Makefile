@@ -16,7 +16,7 @@ $(PROJECT):$(FILE)
 	$(CC) $(CFLAG) $(FILES) -o $(PROJECT)
 
 start:$(PROJECT)
-	./$(PROJECT)
+	python generate_tests.py
 
 clean:
 	rm -f $(PROJECT)

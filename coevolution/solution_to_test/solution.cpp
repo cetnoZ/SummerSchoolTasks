@@ -5,87 +5,88 @@
 #include <cstring>
 #include <cmath>
 #include <queue>
- 
-const int64_t maxn = 1e3 + 7;
-const int64_t maxp = 1e5 + 7;
+#include <unordered_set>
+#include <set>
+#include <fstream>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+const int64_t maxn = 250'000 + 7;
 
-int64_t N, K;
-int64_t d[maxn];
-int64_t dis[maxn][maxn];
-int64_t f[maxn][maxn];
-int64_t p[maxn];
-int64_t ans[maxn];
+using namespace __gnu_pbds;
 
-int64_t head[maxn], next[maxp], to[maxp];
-int64_t top;
- 
-void to__link(int64_t u, int64_t v)
-{
-	next[++top] = head[u];   
-    head[u] = top;   
-    to[top] = v; 
-}
+typedef long long int ll;
 
-void dfs(int64_t node, int64_t far, int64_t diss, int64_t remote)
-{
-	dis[remote][node] = diss;
-	for (int64_t i = head[node], u; u = to[i], i; i = next[i])
-		if (u != far)    
-            dfs(u, node, diss + 1, remote);
-}
+typedef tree<
+ll,
+null_type,
+std::less<ll>,
+rb_tree_tag,
+tree_order_statistics_node_update>
+ordered_set;
 
-void dfs(int64_t node, int64_t far)
-{
-	for (int64_t i = head[node], u; u = to[i], i; i = next[i])
-		if (u != far)  
-          dfs(u, node);
-	for (int64_t i = 1; i <= N; i++)    
-        f[node][i] = K + d[dis[node][i]];
-	for (int i = head[node], u; u = to[i], i; i = next[i])
-		if (u != far)
-			{
-				for (int j = 1; j <= N; j++)
-					f[node][j] = f[node][j] + std::min(f[u][j] - K,f[u][p[u]]);
-			}
-	p[node] = 1;
-	for (int64_t i = 2; i <= N; i++)
-		if (f[node][i] < f[node][p[node]])    
-            p[node] = i;
-}
+typedef tree<ll, null_type, std::less_equal<ll>, rb_tree_tag, tree_order_statistics_node_update> indexed_multiset;
 
-void dfs(int64_t node, int64_t far, int64_t w)
-{
-	ans[node] = w;
-	for (int64_t i = head[node], u; u = to[i], i; i = next[i])
-		if (u != far)
-			{
-				if (f[u][w] - K < f[u][p[u]])
-                    dfs(u, node, w);
-				else 
-                    dfs(u, node, p[u]);
-			}
-}
-//TODO: write full solution
-int main()
-{
-	std::cin >> N >> K;   
-    
-	for (int64_t i = 1; i < N; i++)
-        std::cin >> d[i];
+#define CONSOLE
 
-	for (int64_t i = 1; i < N; i++)
-    {
-        int64_t u, v;
-        std::cin >> u >> v;
-        to__link(u, v);
-        to__link(v, u);
-    }
+
+
+int main(){
+	std::ifstream in;
+	std::ofstream out;
+#ifndef CONSOLE
+	in.open("input.txt");
+	out.open("output.txt");
+#endif
 	
+	ll N, M;
+	ll res = 0;
+	bool flag = false;
+	indexed_multiset X1;
+	indexed_multiset X2;
 
-	for (int64_t i = 1; i <= N; i++)
-		dfs(i,-1, 0, i);
-	dfs(1, 0);
-	std::cout << f[1][p[1]] << std::endl;
-
-    return 0;
+#ifdef CONSOLE
+	#define STREAM_OUT std::cout
+	#define STREAM_IN std::cin
+#else
+	#define STREAM_OUT out
+	#define STREAM_IN in
+#endif
+	STREAM_IN >> N >> M;
+	
+    for(ll i = 0; i < N; i++)
+	{
+		ll num;
+		STREAM_IN >> num;
+		X1.insert(num);
+	}
+	for(ll i = 0; i < M; i++)
+	{
+		ll num;
+		STREAM_IN >> num;
+		X2.insert(num);
+	}
+	while(!X1.empty() && !X2.empty()){
+		ll first = *X1.begin();
+		ll second = *X2.begin();
+		X1.erase(X1.begin());
+		X2.erase(X2.begin());
+		if(first == second)
+			flag ^= true;
+		if(first > second || flag){
+			first += second;
+			X1.insert(first);
+			res += X1.order_of_key(first + 1);
+			
+			continue;
+		}
+		if(first < second || !flag){
+			second += first;
+			X2.insert(second);
+			res += X2.order_of_key(second + 1);
+			
+			continue;
+		}
+	}
+	STREAM_OUT << res << std::endl;
+	return 0;
 }

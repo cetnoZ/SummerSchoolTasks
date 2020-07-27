@@ -7,17 +7,17 @@
 const uint32_t maxn = 4e5 + 7;
 constexpr uint32_t inf = (1 << 31);
 
-class Tree{
+class Heap{
     uint32_t mas[maxn];
     uint32_t count;
 public:
-    explicit Tree(){
+    explicit Heap(){
         count = 0;
         mas[0] = inf;
         for(uint32_t i = 1; i < maxn; i++)
             mas[i] = 0;
     }
-    ~Tree(){}
+    ~Heap(){}
 
     uint32_t push(const uint32_t &num){
         mas[++count] = num;
@@ -80,7 +80,7 @@ public:
 
 int main(){
 	uint64_t N, P;
-    Tree tree;
+    Heap tree;
     std::cin >> N >> P;
     tree.push(P);
     for(uint64_t i = 0; i < N; i++){

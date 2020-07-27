@@ -16,7 +16,6 @@ $(PROJECT):$(FILE)
 	$(CC) $(CFLAG) $(FILES) -o $(PROJECT)
 
 start:$(PROJECT)
-	./$(PROJECT)
 	python script.py
 clean:
 	rm -f $(PROJECT)

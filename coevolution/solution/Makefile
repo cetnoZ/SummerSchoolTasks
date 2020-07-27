@@ -3,7 +3,7 @@ PROJECT=solution
 CC=g++
 LL=g++
 
-FILES=infection.cpp
+FILES=coevolution.cpp
 
 CFLAG = -std=c++17 
 CFLAG+= -Wall 
@@ -16,7 +16,6 @@ $(PROJECT):$(FILE)
 	$(CC) $(CFLAG) $(FILES) -o $(PROJECT)
 
 start:$(PROJECT)
-	./$(PROJECT)
 	python script.py
 clean:
 	rm -f $(PROJECT)
