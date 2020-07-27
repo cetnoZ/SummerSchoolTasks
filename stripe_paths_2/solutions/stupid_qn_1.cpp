@@ -134,24 +134,20 @@ int main() {
     parent_colors.resize(n + 1);
 
     for (int i = 0; i < n; i++) {
-        int l, r, lc, rc;
-        cin >> l >> lc >> r >> rc;
+        int l, r;
+        cin >> l >> r;
 
         l--;
         r--;
 
         if (l != -1) {
             parents[l] = i;
-            parent_colors[l] = lc;
             lefts[i] = l;
-            left_colors[i] = lc;
         }
 
         if (r != -1) {
             parents[r] = i;
-            parent_colors[r] = rc;
             rights[i] = r;
-            right_colors[i] = rc;
         }
     }
 
