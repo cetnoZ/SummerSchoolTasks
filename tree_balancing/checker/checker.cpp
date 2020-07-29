@@ -2,7 +2,7 @@
 #include <vector>
 #include <fstream>
 #include <string>
-#include "../../testlib/testlib.h"
+#include "../testlib/testlib.h"
 
 
 using namespace std;
