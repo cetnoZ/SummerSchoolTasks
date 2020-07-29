@@ -246,13 +246,13 @@ class LineTreeGenerator(TreeGenerator):
 
 ################# generator.py #########################
 
-def create_tree_generator(generator_type='random'):
+def create_tree_generator(generator_type, argv):
     if generator_type == 'random':
         return RandomTreeGenerator()
     if generator_type == 'line':
         return LineTreeGenerator()
     if generator_type == 'depth':
-        depth_coeff = float(os.getenv('DEPTH_COEFF', '1'))
+        depth_coeff = float(argv.get('DEPTH_COEFF', '1'))
         return DepthTreeGenerator(depth_coeff)
 
 def create_tree_expander(average_cycle, cycle_variation):
@@ -275,20 +275,20 @@ def print_queries(queries, file=sys.stdout):
     for (first_index, second_index) in queries:
         print(f"{first_index} {second_index}", file=file)
 
-def main():
-    test_index = int(os.getenv('TEST_INDEX', '0')) + 1
-    test_dir = os.getenv('TEST_DIR')
+def main(args):
+    test_index = int(args.get('TEST_INDEX', '0')) + 1
+    test_dir = args.get('TEST_DIR')
 
-    seed_value = os.getenv('SEED')
-    tree_type = os.getenv('TREE_TYPE', 'random')
-    average_cycle = int(os.getenv('AVERAGE_CYCLE', '10'))
-    cycle_variation = float(os.getenv('CYCLE_VARIATION', '0.1'))
-    vertex_count = int(os.getenv('VERTEX_COUNT', '1'))
-    queries_count = int(os.getenv('QUERIES_COUNT', '1'))
+    seed_value = args.get('SEED')
+    tree_type = args.get('TREE_TYPE', 'random')
+    average_cycle = int(args.get('AVERAGE_CYCLE', '10'))
+    cycle_variation = float(args.get('CYCLE_VARIATION', '0.1'))
+    vertex_count = int(args.get('VERTEX_COUNT', '1'))
+    queries_count = int(args.get('QUERIES_COUNT', '1'))
 
     random.seed(f"{seed_value}_{test_index}")
 
-    tree_generator = create_tree_generator(tree_type)
+    tree_generator = create_tree_generator(tree_type, args)
     tree_expander = create_tree_expander(average_cycle, cycle_variation)
 
     current_vertex_count = random.randint(max(3, vertex_count - max(5, vertex_count // 10)), vertex_count)
@@ -303,12 +303,20 @@ def main():
     queries = list(generate_queries(result_graph, current_queries_count))
     print_queries(queries)
 
-def generate_tests(args):
-    for key in args:
-        os.environ[key] = str(args[key])
-    main()
 
-if __name__ == '__main__':
-    TEST_INDEX, SEED, VERTEX_COUNT, QUERIES_COUNT, TREE_TYPE, AVERAGE_CYCLE, CYCLE_VARIATIONS, DEPTH_COEFF = sys.argv[1:]
 
-    generate_tests({ 'SEED': SEED, 'VERTEX_COUNT': VERTEX_COUNT, 'QUERIES_COUNT': QUERIES_COUNT, 'TREE_TYPE': TREE_TYPE, 'TEST_INDEX': TEST_INDEX, 'AVERAGE_CYCLE': AVERAGE_CYCLE, 'CYCLE_VARIATIONS': CYCLE_VARIATIONS, 'DEPTH_COEFF': DEPTH_COEFF })
+
+
+TEST_INDEX, SEED, VERTEX_COUNT, QUERIES_COUNT, TREE_TYPE, AVERAGE_CYCLE, CYCLE_VARIATIONS, DEPTH_COEFF = (sys.argv[1:] + [None, None])[:8]
+
+
+TEST_INDEX       = sys.argv[1] if len(sys.argv) > 1 else None
+SEED             = sys.argv[2] if len(sys.argv) > 2 else None
+VERTEX_COUNT     = sys.argv[3] if len(sys.argv) > 3 else None
+QUERIES_COUNT    = sys.argv[4] if len(sys.argv) > 4 else None
+TREE_TYPE        = sys.argv[5] if len(sys.argv) > 5 else None
+AVERAGE_CYCLE    = sys.argv[6] if len(sys.argv) > 6 else None
+CYCLE_VARIATIONS = sys.argv[7] if len(sys.argv) > 7 else None
+DEPTH_COEFF      = sys.argv[8] if len(sys.argv) > 8 else None
+
+main({ 'SEED': SEED, 'VERTEX_COUNT': VERTEX_COUNT, 'QUERIES_COUNT': QUERIES_COUNT, 'TREE_TYPE': TREE_TYPE, 'TEST_INDEX': TEST_INDEX, 'AVERAGE_CYCLE': AVERAGE_CYCLE, 'CYCLE_VARIATIONS': CYCLE_VARIATIONS, 'DEPTH_COEFF': DEPTH_COEFF })
