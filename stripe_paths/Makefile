@@ -26,7 +26,7 @@ solutions: ${BIN_DIR} ${SOLUTIONS_RUNNABLE}
 
 .PHONY: clean
 clean:
-	rm -r ${BIN_DIR} ${TESTS_DIR}
+	rm -rf ${BIN_DIR} ${TESTS_DIR}
 
 .PHONY: generate_tests
 generate_tests: ${SOLUTION} ${TESTS_DIR}

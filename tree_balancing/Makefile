@@ -40,5 +40,5 @@ generate_tests: ${TESTS_DIR} ${SOLUTION}
 
 .PHONY: clean
 clean:
-	rm -r ${TESTS_DIR} ${BIN_DIR} ${CHECKER}
+	rm -rf ${TESTS_DIR} ${BIN_DIR} ${CHECKER}
 

@@ -5,9 +5,9 @@
 ./coevolution/clear.sh
 ./synthesis_and_struggle/clear.sh
 
-make -C ./cactus_queries clear
-make -C ./path_rotation clear
-make -C ./stripe_paths clear
-make -C ./stripe_paths_2 clear
-make -C ./tree_balancing clear
+make -C ./cactus_queries clean
+make -C ./path_rotation clean
+make -C ./stripe_paths clean
+make -C ./stripe_paths_2 clean
+make -C ./tree_balancing clean
 
