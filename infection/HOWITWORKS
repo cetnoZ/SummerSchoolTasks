@@ -1,0 +1,7 @@
+############################################################
+1)Generate test using "make start" in "generator" folder
+2)Generate solution using "make start" in "solution" folder 
+//Or use ./prepare_task.sh
+3)Put your solution in "solution_to_test" folder
+4)Start "test.py" checker using "python test.py"
+############################################################
