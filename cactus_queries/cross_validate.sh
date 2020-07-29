@@ -14,7 +14,7 @@ for input_file in tests/input*.txt; do
         solution=`basename ${solution_bin}`
         test_output_file=${TMP_DIR}/output_${solution}
 
-        printf "\t[SOLUTION %20s] " "${solution}"
+        printf "\t[SOLUTION %24s] " "${solution}"
 
         timeout 2 "${solution_bin}" <"${input_file}" >"${test_output_file}"
         if [[ $? -ne 0 ]]; then

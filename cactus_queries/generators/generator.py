@@ -53,7 +53,7 @@ def main():
         tree_generator = create_tree_generator(tree_type)
         tree_expander = create_tree_expander(average_cycle, cycle_variation)
 
-        current_vertex_count = vertex_count - random.randint(0, min(vertex_count - 1, max(vertex_count // 10, 5)))
+        current_vertex_count = random.randint(max(3, vertex_count - max(5, vertex_count // 10)), vertex_count)
 
         tree_vertex_count = random.randint(max(1, current_vertex_count // average_cycle), max(1, current_vertex_count // 2))
 
