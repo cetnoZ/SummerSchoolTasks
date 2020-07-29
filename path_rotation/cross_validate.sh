@@ -36,3 +36,5 @@ for input_file in tests/input*.txt; do
         fi
     done
 done
+
+rm -rf "${TMP_DIR}"
