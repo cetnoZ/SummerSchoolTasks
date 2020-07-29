@@ -1,0 +1,7 @@
+############################################################
+1)Generate tests using "make generate_tests"
+2)Clean solutions using "make solutions"
+3)Cross validate all solutions using "make cross_validate"
+4)Clean all task data using "make clean"
+5)Compile solutions and generate tests using "make all"
+############################################################
