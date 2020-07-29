@@ -89,14 +89,7 @@ long long query(int u, int v) {
         int v = path[i];
         auto v_neighbors = get_neighbors(v);
         neighbors[i] = v_neighbors;
-       // clog << "for v = " << v << " neighbors are ";
-      //  for (auto e : v_neighbors) {
-     //       clog << " {" << e.in_value << ", " << e.out_value << "} , ";
-       // }
-   //     clog << endl;
     }
-
-// clog << "Here 1" << endl;
 
     long long path_weight = calc_path_weight(path);
     long long answer = path_weight;
@@ -112,7 +105,6 @@ long long query(int u, int v) {
 
                     long long sub_answer = path_weight - first_neighbor.out_value + second_neighbor.in_value;
                     answer = min(answer, sub_answer);
-        //            clog << "rotate with " << path[i] << ", " << path[j] << " to get " << sub_answer << endl;
                 }
             }
         }
