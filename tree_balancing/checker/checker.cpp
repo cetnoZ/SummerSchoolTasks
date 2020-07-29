@@ -9,7 +9,7 @@ using namespace std;
 const int ROOT = 1;
 const long long MAX_WEIGHT = 1e9;
 const int MAX_N = 500;
-const int MAX_SWAPS = 3e6;
+const int MAX_SWAPS = 3e5;
 
 struct node_t {
     node_t *left, *right, *parent;
