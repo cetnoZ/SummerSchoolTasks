@@ -5,7 +5,7 @@ from collections import deque
 
 ################# graph.py #########################
 
-class node:
+class Node:
     def __init__(self, index):
         self._index = index
         self._neighbors = []
@@ -79,7 +79,7 @@ def print_graph(node, file=sys.stdout):
 
 ################# tree_expander.py #########################
 
-class treeexpander:
+class TreeExpander:
     def expand_tree(self, tree, expected_size):
         return tree
 
@@ -88,9 +88,9 @@ class treeexpander:
 
 ################# random_tree_expander.py #########################
 
-class randomtreeexpander(treeexpander):
+class RandomTreeExpander(TreeExpander):
     def __init__(self, average_cycle, cycle_variation):
-        treeexpander.__init__(self)
+        TreeExpander.__init__(self)
         self._average_cycle = average_cycle
         self._cycle_variation = cycle_variation
         self._node_counter = 0
@@ -128,7 +128,7 @@ class randomtreeexpander(treeexpander):
 
     def create_node(self):
         self._node_counter += 1
-        return node(self._node_counter)
+        return Node(self._node_counter)
 
     def create_cycle(self, weight):
         cycle_nodes = [self.create_node() for _ in range(weight)]
@@ -145,33 +145,33 @@ class randomtreeexpander(treeexpander):
 
 ################# tree_generator.py #########################
 
-class treegenerator:
+class TreeGenerator:
     def __init__(self):
         self.vertex_counter = 0
 
     def generate(self, vertex_count):
-        return none
+        return None
 
     def add_node(self, parent, node):
-        if (parent.left_node is not none) and (parent.right_node is not none):
-            return false
-        elif (parent.left_node is none) and (parent.right_node is none):
+        if (parent.left_node is not None) and (parent.right_node is not None):
+            return False
+        elif (parent.left_node is None) and (parent.right_node is None):
             if random.randint(0, 1) == 0:
                 parent.left_node = node
             else:
                 parent.right_node = node
-        elif parent.left_node is none:
+        elif parent.left_node is None:
             parent.left_node = node
-        elif parent.right_node is none:
+        elif parent.right_node is None:
             parent.right_node = node
-        return true
+        return True
 
     def can_add_node(self, parent):
-        return (parent.left_node is none) or (parent.right_node is none)
+        return (parent.left_node is None) or (parent.right_node is None)
 
     def create_node(self):
         self.vertex_counter += 1
-        return node(self.vertex_counter)
+        return Node(self.vertex_counter)
 
     create_node.counter = 0
 
@@ -180,9 +180,9 @@ class treegenerator:
 
 ################# random_tree_generator.py #########################
 
-class randomtreegenerator(treegenerator):
+class RandomTreeGenerator(TreeGenerator):
     def __init__(self):
-        treegenerator.__init__(self)
+        TreeGenerator.__init__(self)
 
     def generate(self, vertex_count):
         root = self.create_node()
@@ -202,9 +202,9 @@ class randomtreegenerator(treegenerator):
 
 ################# depth_tree_generator.py #########################
 
-class depthtreegenerator(treegenerator):
+class DepthTreeGenerator(TreeGenerator):
     def __init__(self, depth_coeff=1):
-        treegenerator.__init__(self)
+        TreeGenerator.__init__(self)
         self._depth_coeff = depth_coeff
 
     def generate(self, vertex_count):
@@ -226,9 +226,9 @@ class depthtreegenerator(treegenerator):
 
 ################# line_tree_generator.py #########################
 
-class linetreegenerator(treegenerator):
+class LineTreeGenerator(TreeGenerator):
     def __init__(self, depth_coeff=1):
-        treegenerator.__init__(self)
+        TreeGenerator.__init__(self)
         self._depth_coeff = depth_coeff
 
     def generate(self, vertex_count):
@@ -248,15 +248,15 @@ class linetreegenerator(treegenerator):
 
 def create_tree_generator(generator_type='random'):
     if generator_type == 'random':
-        return randomtreegenerator()
+        return RandomTreeGenerator()
     if generator_type == 'line':
-        return linetreegenerator()
+        return LineTreeGenerator()
     if generator_type == 'depth':
-        depth_coeff = float(os.getenv('depth_coeff', '1'))
-        return depthtreegenerator(depth_coeff)
+        depth_coeff = float(os.getenv('DEPTH_COEFF', '1'))
+        return DepthTreeGenerator(depth_coeff)
 
 def create_tree_expander(average_cycle, cycle_variation):
-    return randomtreeexpander(average_cycle, cycle_variation)
+    return RandomTreeExpander(average_cycle, cycle_variation)
 
 def generate_queries(graph, queries_count):
     nodes_count = len(list(graph_to_nodes(graph)))
@@ -276,15 +276,15 @@ def print_queries(queries, file=sys.stdout):
         print(f"{first_index} {second_index}", file=file)
 
 def main():
-    test_index = int(os.getenv('test_index', '0')) + 1
-    test_dir = os.getenv('test_dir')
+    test_index = int(os.getenv('TEST_INDEX', '0')) + 1
+    test_dir = os.getenv('TEST_DIR')
 
-    seed_value = os.getenv('seed')
-    tree_type = os.getenv('tree_type', 'random')
-    average_cycle = int(os.getenv('average_cycle', '10'))
-    cycle_variation = float(os.getenv('cycle_variation', '0.1'))
-    vertex_count = int(os.getenv('vertex_count', '1'))
-    queries_count = int(os.getenv('queries_count', '1'))
+    seed_value = os.getenv('SEED')
+    tree_type = os.getenv('TREE_TYPE', 'random')
+    average_cycle = int(os.getenv('AVERAGE_CYCLE', '10'))
+    cycle_variation = float(os.getenv('CYCLE_VARIATION', '0.1'))
+    vertex_count = int(os.getenv('VERTEX_COUNT', '1'))
+    queries_count = int(os.getenv('QUERIES_COUNT', '1'))
 
     random.seed(f"{seed_value}_{test_index}")
 
@@ -309,6 +309,6 @@ def generate_tests(args):
     main()
 
 if __name__ == '__main__':
-    test_index, seed, vertex_count, queries_count, tree_type, average_cycle, cycle_variations, depth_coeff = sys.argv[1:]
+    TEST_INDEX, SEED, VERTEX_COUNT, QUERIES_COUNT, TREE_TYPE, AVERAGE_CYCLE, CYCLE_VARIATIONS, DEPTH_COEFF = sys.argv[1:]
 
-    generate_tests({ 'seed': seed, 'vertex_count': vertex_count, 'queries_count': queries_count, 'tree_type': tree_type, 'test_index': test_index, 'average_cycle': average_cycle, 'cycle_variations': cycle_variations, 'depth_coeff': depth_coeff })
+    generate_tests({ 'SEED': SEED, 'VERTEX_COUNT': VERTEX_COUNT, 'QUERIES_COUNT': QUERIES_COUNT, 'TREE_TYPE': TREE_TYPE, 'TEST_INDEX': TEST_INDEX, 'AVERAGE_CYCLE': AVERAGE_CYCLE, 'CYCLE_VARIATIONS': CYCLE_VARIATIONS, 'DEPTH_COEFF': DEPTH_COEFF })
