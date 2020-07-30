@@ -1,0 +1,158 @@
+% 0 = resource relative path
+% 1 = sample box declarations
+% 2 = document body
+
+\documentclass [11pt, a4paper, oneside, notitlepage] {article}
+
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian, english]{babel}
+\usepackage[intlimits]{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {/algotester/bin/resources/} }
+
+\allowdisplaybreaks
+\widowpenalty=4774
+\clubpenalty=4774
+
+\newcolumntype{C}{>{\arraybackslash}X}
+
+\newsavebox\boxi
+\newsavebox\boxo
+
+
+\begin {document}
+
+\section*{Cyclic nucleotides 2}
+\hspace{1cm}
+\emph{Limits: 2 sec., 512 MiB}
+\bigskip
+
+After the end of research of alien DNA brought by famous space probe "Traveler-3" it is not a secret that DNA structure of alien beings is not linear, it looks more like a tree.
+
+This time scientists decides to recreate alien species using only samples of their DNA. This obviously takes years of research and practice. However, research center "Laboratory No. 1" knows how to radically speed up decoding alien DNA for upcoming experiment to recreate aliens. The plan is to automate tests with DNA under control of artificial intelligence (AI) and Automatic DNA Manipulation Station (ADMS). As an experiments developer, you were asked to write an emulator of ADMS device for test run under AI control.
+
+
+As already mentioned, DNA consists of a set of $\mathbf{N}$ numbered nodes from $1$ to $\mathbf{N}$, some of which are connected by one of two nucleobase types. It is known that scientists has chosen one of the primitive species for first time, so the DNA's nodes forms a binary tree with a root in vertex 1. It means that:
+
+\begin{itemize}
+    \item there is only one path between any two nodes;
+    \item any node of DNA contains at most two nodes connected to it, which are located below.
+\end{itemize}
+
+Scientists already have been accustomed to calling nucleotide a path between two nodes, consisting of nodes connected in series by nucleobases. Also, a nucleotide is called "cyclic" if the nucleobase types, placed in order from its start to end, form a "cyclic" pattern. "Cyclic" pattern is called such sequence of DNA nucleobases consisting of positive number of same segments, each of which can be represented as $k$ nucleobases of type 0 followed by $k$ nucleobases of type 1, for some $k > 0$.
+
+To satisfy the conditions of the experiments emulator should be able to process two types of queries:
+
+\begin{itemize}
+    \item $1$ $u_j$ $v_j$ -- query to check if path from $u_j$ to $v_j$ "cyclic" nucleotide;
+    \item $2$ $u_j$ $v_j$ $k_j$ -- change of nucleobases lying on nucleotide from node $u_j$ to $v_j$ so that it becomes "cyclic" and line of each segment equal to $2 * k_j$.
+\end{itemize}
+
+For simplification of tests emulator always starts with empty DNA, which means before starting queries processing all nuclebases on existing connections are of type 0.
+
+Help scientists with their research and write emulator for ADMS device.
+
+\section*{Input}
+
+The first line contatins only one integer $\mathbf{N}$, number of nodes in alien DNA.
+
+Following $\mathbf{N}$ lines contains two integers each -- $l_i$ and $r_i$, which are left and right nodes connected to $i^{th}$ node and located below it. If left or right adjacent nodes don't exists $l_i$ or/and $r_i$ will be equal to $0$.
+
+Next line contains one integer $\mathbf{Q}$, number of queries to the device.
+
+Following $\mathbf{Q}$ lines describes queries. $j^{th}$ query can be in one of two formats:
+
+\begin{itemize}
+    \item $1$ $u_j$ $v_j$ -- for descibe query of the first type;
+    \item $2$ $u_j$ $v_j$ $k_j$ -- for describe query of the second type.
+\end{itemize}
+
+
+It is guaranteed that input describes correct binary tree, and for queries of the second type $2 * k_j$ divides length of the path from $u_j$ to $v_j$.
+
+
+\section*{Output}
+
+For every query of the first type output "Yes", if nucleotide from $u_j$ to $v_j$ node is "cyclic", and "No" otherwise.
+
+
+\section*{Constraints}
+$1 \le \mathbf{N} \le 3 * 10^4$,
+$0 \le l_i, r_i \le \mathbf{N}$,
+
+$0 \le u_i, v_i \le \mathbf{N}$,
+$u_i \neq v_i$,
+$1 <= k_i <= \left\lfloor \frac{\mathbf{N} - 1}{2} \right\rfloor$
+
+\begin{lrbox}{\boxi}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+10
+0 2
+4 3
+9 7
+5 6
+0 0
+0 0
+8 0
+0 0
+0 10
+0 0
+10
+2 7 2 1
+2 3 1 1
+2 7 6 2
+2 5 9 1
+1 4 8
+1 7 9
+2 1 3 1
+2 9 7 1
+1 2 4
+2 4 1 1
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\begin{lrbox}{\boxo}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+No
+Yes
+No
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\section*{Samples}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{|C|C|}
+\hline
+Input (\emph{stdin}) & Output (\emph{stdout}) \tabularnewline
+\hline
+\usebox\boxi & \usebox\boxo \tabularnewline
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+\clearpage
+
+
+
+\end {document}
+
+
