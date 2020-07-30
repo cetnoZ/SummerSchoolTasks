@@ -47,7 +47,7 @@ def main():
         with open(os.path.join(test_dir, f"input{test_index}.txt"), 'w') as file:
             vertex_count_delta = min(vertex_count - 1, max(vertex_count // 10, 5))
 
-            tree = tree_generator.generate(vertex_count + random.randint(-vertex_count_delta, vertex_count))
+            tree = tree_generator.generate(vertex_count + random.randint(-vertex_count_delta, 0))
             tree_labeler.label_tree(tree)
             print_tree(tree, file=file)
         print(f"[TEST #{test_index: >3}] done")
