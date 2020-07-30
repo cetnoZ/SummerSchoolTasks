@@ -91,71 +91,6 @@ def print_tree(root, file=sys.stdout):
 
 
 
-################# tree_expander.py #########################
-
-class TreeExpander:
-    def expand_tree(self, tree, expected_size):
-        return tree
-
-
-
-
-################# random_tree_expander.py #########################
-
-class RandomTreeExpander(TreeExpander):
-    def __init__(self, average_cycle, cycle_variation):
-        TreeExpander.__init__(self)
-        self._average_cycle = average_cycle
-        self._cycle_variation = cycle_variation
-        self._node_counter = 0
-
-    def expand_tree(self, tree, expected_size):
-        nodes = list(graph_to_nodes(tree))
-        nodes_count = len(nodes)
-        node_weight = {}
-
-        random.shuffle(nodes)
-
-        for node in nodes:
-            weight = self.pick_node_weight(expected_size - nodes_count + 1)
-            nodes_count += weight - 1
-
-            node_weight[node.index] = weight
-
-        self._node_counter = 0
-        cycles = {node.index: self.create_cycle(node_weight.get(node.index, 1)) for node in graph_to_nodes(tree)}
-
-        for (first_node, second_node) in graph_to_edges(tree):
-            first_cycle = cycles[first_node.index]
-            second_cycle = cycles[second_node.index]
-
-            first_cycle_node = random.choice(first_cycle)
-            second_cycle_node = random.choice(second_cycle)
-
-            first_cycle_node.add_neighbor(second_cycle_node)
-        return list(cycles.values())[0][0]
-
-    def pick_node_weight(self, max_weight):
-        max_weight = min(max_weight, int(self._average_cycle * (1 + self._cycle_variation)))
-        min_weight = max(1, max_weight - 2 * int(self._average_cycle * (1 - self._cycle_variation)))
-        return random.randint(min_weight, max_weight)
-
-    def create_node(self):
-        self._node_counter += 1
-        return Node(self._node_counter)
-
-    def create_cycle(self, weight):
-        cycle_nodes = [self.create_node() for _ in range(weight)]
-        if weight > 2:
-            for i in range(weight):
-                cycle_nodes[i].add_neighbor(cycle_nodes[i - 1])
-        elif weight == 2:
-            cycle_nodes[0].add_neighbor(cycle_nodes[1])
-
-        return cycle_node
-
-
-
 ################# tree_generator.py #########################
 
 class TreeGenerator:
@@ -201,35 +136,19 @@ class RandomTreeGenerator(TreeGenerator):
         root = self.create_node()
         vertices = [root]
 
-        for _ in range(vertex_count - 1):
-            node = self.create_node()
-
+        vertex_count -= 1
+        while vertex_count > 0:
             parent = random.choice(vertices)
-            parent.add_child(node)
 
+            node = self.create_node()
+            self.add_node(parent, node)
             vertices.append(node)
+            vertex_count -= 1
+
+            if not self.can_add_node(parent):
+                vertices.remove(parent)
+                continue
         return root
-
-
-
-
-################# line_tree_generator.py #########################
-
-class LineTreeGenerator(TreeGenerator):
-    def __init__(self, depth_coeff=1):
-        TreeGenerator.__init__(self)
-        self._depth_coeff = depth_coeff
-
-    def generate(self, vertex_count):
-        root = self.create_node()
-        vertex = root
-
-        for _ in range(vertex_count - 1):
-            vertex, parent = self.create_node(), vertex
-            parent.add_child(vertex)
-
-        return root
-
 
 
 
@@ -243,21 +162,87 @@ class DepthTreeGenerator(TreeGenerator):
     def generate(self, vertex_count):
         root = self.create_node()
         vertices = [root]
-        accumulated_weights = [1]
+        weights = [1]
 
-        for _ in range(vertex_count - 1):
+        vertex_count -= 1
+        while vertex_count > 0:
+            parent = random.choices(vertices, weights=weights)[0]
+
             node = self.create_node()
-            parent = random.choices(vertices, cum_weights=accumulated_weights)[0]
-
-            parent.add_child(node)
+            self.add_node(parent, node)
             vertices.append(node)
-            accumulated_weights.append(accumulated_weights[-1] + self._depth_coeff * node.depth)
+            weights.append(self._depth_coeff * node.depth)
+            vertex_count -= 1
+
+            if not self.can_add_node(parent):
+                index = vertices.index(parent)
+                vertices = vertices[:index] + vertices[index + 1:]
+                weights = weights[:index] + weights[index + 1:]
+                continue
+
         return root
 
 
 
 
-################# depth_tree_generator.py #########################
+
+################# line_tree_generator.py #########################
+
+class LineTreeGenerator(TreeGenerator):
+    def __init__(self):
+        TreeGenerator.__init__(self)
+
+    def generate(self, vertex_count):
+        root = self.create_node()
+        vertex = root
+
+        for _ in range(vertex_count - 1):
+            node = self.create_node()
+            direction = random.choice(['left', 'right'])
+            if direction == 'left':
+                vertex.left_node = node
+                vertex = node
+            elif direction == 'right':
+                vertex.right_node = node
+                vertex = node
+        return root
+
+
+
+
+
+################# tree_weighter.py #########################
+
+class TreeWeighter:
+    def set_weights(self, root):
+        return root
+
+
+
+
+################# random_tree_weighter.py #########################
+
+class RandomTreeWeighter(TreeWeighter):
+    def __init__(self, max_weight, percent=0.1):
+        TreeWeighter.__init__(self)
+        self._max_weight = max_weight
+        self._percent = percent
+
+    def set_weights(self, root):
+        for vertex in tree_nodes(root):
+            vertex.weight = self.pick_weight()
+        return root
+
+    def pick_weight(self):
+        min_weight = max(0, round(self._max_weight * (1 - self._percent)))
+        max_weight = self._max_weight
+        return random.randint(min_weight, max_weight)
+
+
+
+
+
+################# generator.py #########################
 
 def create_tree_generator(generator_type, args):
     if generator_type == 'random':
@@ -268,54 +253,47 @@ def create_tree_generator(generator_type, args):
         depth_coeff = float(args.get('DEPTH_COEFF', '1'))
         return DepthTreeGenerator(depth_coeff)
 
-def create_tree_expander(average_cycle, cycle_variation):
-    return RandomTreeExpander(average_cycle, cycle_variation)
+def create_tree_weighter(weight_type, args):
+    if weight_type == 'random':
+        max_weight = float(args.get('MAX_WEIGHT'))
+        weight_percent = float(args.get('WEIGHT_PERCENT', '0.1'))
+        return RandomTreeWeighter(max_weight, weight_percent)
 
-def generate_queries(graph, queries_count):
-    nodes_count = len(list(graph_to_nodes(graph)))
-    edges = {(first_node.index, second_node.index) for (first_node, second_node) in graph_to_edges(graph)}
+def generate_queries(tree, queries_count):
+    nodes_count = len(list(tree_nodes(tree)))
 
-    if nodes_count > 3:
-        for _ in range(queries_count):
-            first_index, second_index = random.sample(range(1, nodes_count + 1), 2)
-            while ((first_index, second_index) in edges) or ((second_index, first_index) in edges):
-                first_index, second_index = random.sample(range(1, nodes_count + 1), 2)
-            yield (first_index, second_index)
-
+    for _ in range(queries_count):
+        first_index, second_index = random.sample(range(1, nodes_count + 1), 2)
+        yield (first_index, second_index)
 
 def print_queries(queries, file=sys.stdout):
-    print(len(queries), file=file)
+    queries_count = len(queries)
+    print(queries_count, file=file)
     for (first_index, second_index) in queries:
         print(f"{first_index} {second_index}", file=file)
-        
+
+
 def main(args):
     test_index = int(args.get('TEST_INDEX', '0')) + 1
-    test_dir = args.get('TEST_DIR')
 
     seed_value = args.get('SEED')
     tree_type = args.get('TREE_TYPE', 'random')
-    average_cycle = int(args.get('AVERAGE_CYCLE', '10'))
-    cycle_variation = float(args.get('CYCLE_VARIATION', '0.1'))
     vertex_count = int(args.get('VERTEX_COUNT', '1'))
     queries_count = int(args.get('QUERIES_COUNT', '1'))
+    weight_type = args.get('WEIGHT_TYPE', 'random')
 
     random.seed(f"{seed_value}_{test_index}")
 
-    tree_generator = create_tree_generator(tree_type)
-    tree_expander = create_tree_expander(average_cycle, cycle_variation)
+    tree_generator = create_tree_generator(tree_type, args)
+    tree_weighter = create_tree_weighter(weight_type, args)
+    vertex_count_delta = min(vertex_count - 1, max(vertex_count // 10, 5))
 
-    current_vertex_count = random.randint(max(3, vertex_count - max(5, vertex_count // 10)), vertex_count)
+    tree = tree_generator.generate(vertex_count + random.randint(-vertex_count_delta, 0))
+    tree = tree_weighter.set_weights(tree)
+    print_tree(tree)
 
-    tree_vertex_count = random.randint(max(1, current_vertex_count // average_cycle), max(1, current_vertex_count // 2))
-
-    tree = tree_generator.generate(tree_vertex_count)
-    result_graph = tree_expander.expand_tree(tree, current_vertex_count)
-
-    print_graph(result_graph)
-    current_queries_count = random.randint(0, queries_count)
-    queries = list(generate_queries(result_graph, current_queries_count))
+    queries = list(generate_queries(tree, random.randint(0, queries_count)))
     print_queries(queries)
-
 
 
 
