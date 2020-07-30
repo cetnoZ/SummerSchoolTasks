@@ -1,0 +1,144 @@
+% 0 = resource relative path
+% 1 = sample box declarations
+% 2 = document body
+
+\documentclass [11pt, a4paper, oneside, notitlepage] {article}
+
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian, english]{babel}
+\usepackage[intlimits]{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {/algotester/bin/resources/} }
+
+\allowdisplaybreaks
+\widowpenalty=4774
+\clubpenalty=4774
+
+\newcolumntype{C}{>{\arraybackslash}X}
+
+\newsavebox\boxi
+\newsavebox\boxo
+
+
+\begin {document}
+
+\section*{Centrifuge 2.0}
+\hspace{1cm}
+\emph{Limits: 2 sec., 512 MiB}
+\bigskip
+
+
+One day laboratory-assistant Petya during one of the usage of device "Centrifuge 2.0" for extracting DNA from the solution decided not to configure it before turning on, which was clearly described in the instruction.
+As the result settings of the main mechanism of the device was reset, so now the usage time has become huge, and one lauch can take weeks according to device estimates.
+
+Reading through instruction Petya decided to adjust configuration of the main mechanism so that operating time of the centrifuge be as less as possible. The documentation says that mechanism is a binary tree consisting of $\mathbf{N}$ numbered nodes from $1$ to $\mathbf{N}$, each of which has attached numbers $w_i$ -- weights of the nodes. Petya recalled from the first year of university that a binary tree has the following properties:
+
+\begin{itemize}
+    \item between any two nodes there is a path consisting of connected in series nodes;
+    \item each node has no ore than two child -- left and right, linked by edges to the original node;
+    \item there is an node 1, which is the root of the tree.
+\end{itemize}
+
+The instruction shows that operating time $\mathbf{T}$ of the centrifuge depends on the configuration of the main mechanism, namely, it is calculated by the formula:
+
+$$
+T = w_1 * h_1 + w_2 * h_2 + ... + w_{\mathbf{N}} * h_{\mathbf{N}} = \sum_{n = 1}^{\mathbf{N}} w_n * h_n 
+$$
+-- where $w_i$ is the weight of $i^{th}$ vertex, $h_i$ is number of vertices from root to node $1$, counting ends of the path.
+
+Configuration algorithm contains of several sequential rotations of the edges. Edge rotation for the edge $u - v$ to $v - u$ or vice versa depicted on the scheme below:
+
+\begin{figure}[h]
+\includegraphics[width=16cm]{10111-rotation}
+\centering
+\end{figure}
+
+It can be seen seen from the figure that one of the vertices becomes higher than other, but the order of the Euler traversal of the entire tree does not change, i.e. order of subtrees $A$, $B$ and $C$ remains the same.
+
+Help Petya fix the device by adjusting the main mechanism and performing a certain number of rotations so that the operating time is minimal.
+
+
+\section*{Input}
+
+The first line contains integer $\mathbf{N}$, number of nodes in the main mechanism.
+
+Next $\mathbf{N}$ lines describes nodes of the mechanism. $i^{th}$ node is described by three integers $l_i$, $r_i$ and $w_i$ -- left and right childs of the $i^{th}$ node, and its weight.
+
+Its guaranteed that each tests describes correct binary tree.
+
+Then there are $\mathbf{N} - 1$ lines describing connections between nodes in DNA. 
+Line describing $i^{th}$ connection contains three integers three integers $u_i$, $v_i$ and $c_i$, which are starting and ending nodes of $i^{th}$ connection and also nucleobase that links them.
+
+It is guaranteed that input describes correct tree.
+
+
+\section*{Output}
+
+In the first line output one integer $\mathbf{Q}$ ($1 \le \mathbf{Q} \le 3 * 10^5$) -- number of the edge rotation, required to achieve minimal operating time of the device.
+
+Next $\mathbf{Q}$ lines should contains two integers separated by spaces in any order $v_i$ and $u_i$ -- vertices of the edge over which the rotation is performed, while an edge between these vertices must exist.
+
+If there are several ways to configure mechanism, you may output any of them.
+
+
+\section*{Constraints}
+$1 \le \mathbf{N} \le 500$,
+$0 \le l_i, r_i \le \mathbf{N}$,
+$0 \le w_i \le 10^9$
+
+\begin{lrbox}{\boxi}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+5
+5 0 3
+3 4 5
+0 0 4
+0 0 1
+2 0 2
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\begin{lrbox}{\boxo}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+2
+5 1
+2 5
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\section*{Samples}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{|C|C|}
+\hline
+Input (\emph{stdin}) & Output (\emph{stdout}) \tabularnewline
+\hline
+\usebox\boxi & \usebox\boxo \tabularnewline
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+\clearpage
+
+
+
+\end {document}
+
+
