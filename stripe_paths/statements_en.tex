@@ -1,0 +1,116 @@
+% 0 = resource relative path
+% 1 = sample box declarations
+% 2 = document body
+
+\documentclass [11pt, a4paper, oneside, notitlepage] {article}
+
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian, english]{babel}
+\usepackage[intlimits]{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {/algotester/bin/resources/} }
+
+\allowdisplaybreaks
+\widowpenalty=4774
+\clubpenalty=4774
+
+\newcolumntype{C}{>{\arraybackslash}X}
+
+\newsavebox\boxi
+\newsavebox\boxo
+
+
+\begin {document}
+
+\section*{Cyclic nucleotides}
+\hspace{1cm}
+\emph{Limits: 2 sec., 512 MiB}
+\bigskip
+
+The launch of well-known space probe "Traveler-3" gave scientists an enormous number of samples from several planets.
+During their research one of the scientists noticed that samples contains virus of alien origin, which has very odd kind DNA.
+
+After analysis of alien DNA, it turned out that its structure is not linear, but resembles connected structure in which n nodes are clearly distinguished and some of them are connected with two types of nucleobases. 
+During the study, scientists decided to hang DNA by the node 1 to simplify further experiments, but this revealed some previously undetected properties of DNA. One of them states that DNA not contains cycles.
+
+To connect their research with already existed science of molecular biology scientists decided to name nucleotide path between two nodes, consisting of nodes connected in series by nucleobases. 
+They also begin to name nucleotide "straight" if every subsequent node in nucleotide are located lower than previous one in the order of traversal from the starting node to end of nucleotide.  
+
+Further research discovered "cyclic" nucleotides. Nucleotide is named "cyclic" if nucleobases, which connects nodes in nucleotide in the order from its start to end, forms "cyclic" pattern.
+"Cyclic" pattern is called such sequence of DNA nucleobases consisting of positive number of same segments, each of which can be represented as $k$ nucleobases of type 0 followed by $k$ nucleobases of type 1, for some $k > 0$.
+
+Your task is to help scientists with classification of DNAs. For this they asked you to find number of "straight" and "cyclic" nucleotides in given DNA.
+
+\section*{Input}
+
+The first line contains single integer $\mathbf{N}$, number of nodes in alien DNA.
+
+Then there are $\mathbf{N} - 1$ lines describing connections between nodes in DNA. 
+Line describing $i^{th}$ connection contains three integers three integers $u_i$, $v_i$ and $c_i$, which are starting and ending nodes of $i^{th}$ connection and also nucleobase that links them.
+
+It is guaranteed that input describes correct tree.
+
+
+\section*{Output}
+
+Output one integer -- number of "straight" "cyclic" nucleotides.
+
+
+\section*{Constraints}
+$1 \le \mathbf{N} \le 10^5$,
+$1 \le v_i, u_i \le \mathbf{N}$,
+$1 \le c_i \le 1$
+
+\begin{lrbox}{\boxi}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+5
+1 2 1
+2 3 0
+3 4 1
+4 5 0
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\begin{lrbox}{\boxo}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+3
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\section*{Samples}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{|C|C|}
+\hline
+Input (\emph{stdin}) & Output (\emph{stdout}) \tabularnewline
+\hline
+\usebox\boxi & \usebox\boxo \tabularnewline
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+\clearpage
+
+
+
+\end {document}
+
+
