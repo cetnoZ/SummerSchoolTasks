@@ -1,0 +1,137 @@
+% 0 = resource relative path
+% 1 = sample box declarations
+% 2 = document body
+
+\documentclass [11pt, a4paper, oneside, notitlepage] {article}
+
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian, english]{babel}
+\usepackage[intlimits]{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{tabularx}
+
+\usepackage{indentfirst}
+\usepackage{subcaption}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {/algotester/bin/resources/} }
+
+\allowdisplaybreaks
+\widowpenalty=4774
+\clubpenalty=4774
+
+\newcolumntype{C}{>{\arraybackslash}X}
+
+\newsavebox\boxi
+\newsavebox\boxo
+
+
+\begin {document}
+
+\section*{Password recovery}
+\hspace{1cm}
+\emph{Limits: 2 sec., 512 MiB}
+\bigskip
+
+As all know, most expensive and valuable equipment for experiments is stored behind a lock with a strong password. 
+But what if the password has been lost? The answer is, of course, the Universal Device for Password Recoovery (UDPR). It allows to recover password for any lock.
+
+However the device was present in a single copy and was lost a long time ago. Only the drawings of the device itself remains, but not the program for it. 
+In order to avoid such occurences of password lost you was asked to write firmware for the device, that should conform to the Universal Password Recovery Interface (UPRI).
+
+According to the documentation for the interface, a binary tree rooted at vertex 1 is fed to the input of the device with weight $w_i$ on each edge.
+Further, in order to acquire the password, the device should output answers to q queries.
+
+Queries are a pairs of vertices $u_i$ and $v_i$. 
+Answer to the query is the maximum sum of edge weights on the path between $u_i$ and $v_i$ which you can achieve after applying at most one rotation of the path beween any two vertices $a$ and $b$ which don't lie on the path from $u_i$ to $v_i$.
+
+In the doctimentation to the UDPR was a note that rotation of the path from $a$ to $b$ is called a proccess of right cyclic shift of edge weights. Namely, $w_{path_2}$ becomes equal to $w_{path_1}$, $w_{path_3}$ changes to $w_{path_2}$ and so on to $w_{path_k}$, and finally $w_{path_k}$ goes to $w_{path_1}$, where $k$ is length of the path. Also, $path_i$ is the $i^{th}$ edge on the path from vertex $a$ to $b$.
+
+Since there are too many queries and you need to answer them in fractions of a seconds, you were asked to help with writing the firmware to handle this queries quickly.
+
+\section*{Input}
+
+The first line of the input contains one integer $\mathbf{N}$, number of vertices in the tree
+
+Next $\mathbf{N}$ lines describes vertices. $i^{th}$ vertex is represented by three integers $u_i$, $v_i$ and $w_i$, which is left and right childs of vertex $i$ and weight of the edge from $i^{th}$ vertex tot its parent. If left or right child doesn't exist $u_i$ or $v_i$ will be equal to 0.
+
+Following line contains single integer $\mathbf{Q}$, which is the number of queries.
+
+Next $\mathbf{Q}$ lines describes queries to the device. Each query contains two distinct integers $a_j$ and $b_j$, vertices of the path for which you need to find maximum sum of weights after applying one path rotation.
+
+The first line of input contains two integers $mathbf{N}$ and $mathbf{M}$, where $mathbf{N}$ is the number of nodes in the protein and $\mathbf{M}$ is the number of connections between nodes.
+
+It is guaranteed that input represents correct binary tree.
+
+\section*{Output}
+
+For each query output single integer -- maximum sum of edge weights that can be achieved by applying no more than one path rotation of the path which start and end vertices doesn't belong to the path from $u_j$ to $v_j$ for $j^{th}$.
+
+\section*{Constraints}
+$3 \le \mathbf{N} \le 5000$,
+$0 \le \mathbf{Q} \le 5000$,
+$0 \le v_j, u_j \le \mathbf{N}$,
+$0 \le w_j \le 10^9$,
+$0 \le a_j, b_j \le \mathbf{N}$,
+
+\begin{lrbox}{\boxi}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+10
+2 3 10
+7 6 4
+4 5 1
+0 0 9
+0 0 7
+8 9 7
+0 0 1
+10 0 6
+0 0 0
+0 0 5
+3
+7 10
+5 9
+1 4
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\begin{lrbox}{\boxo}
+\begin{minipage}[t]{0.5\textwidth}
+\noindent
+\vspace{-7mm}
+\begin{verbatim}
+19
+23
+17
+% Value $w_1$ can be safely discarded because vertex 1 has no parent.
+\end{verbatim}
+\vspace{0mm}
+\end{minipage}
+\end{lrbox}
+\section*{Samples}
+\begin{table}[H]
+\begin{tabularx}{\textwidth}{|C|C|}
+\hline
+Input (\emph{stdin}) & Output (\emph{stdout}) \tabularnewline
+\hline
+\usebox\boxi & \usebox\boxo \tabularnewline
+\hline
+
+\end{tabularx}
+\end{table}
+
+
+\clearpage
+
+
+
+\end {document}
+
+
